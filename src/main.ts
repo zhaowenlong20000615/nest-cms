@@ -5,6 +5,8 @@ import * as cookieParser from 'cookie-parser'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { join } from 'path'
 import { engine } from 'express-handlebars'
+import { ValidationPipe } from '@nestjs/common'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -32,6 +34,17 @@ async function bootstrap() {
       },
     }),
   )
+  app.useGlobalPipes(new ValidationPipe())
+
+  const config = new DocumentBuilder()
+    .setTitle('CMS')
+    .setDescription('CMS 前后端接口')
+    .setVersion('1.0')
+    .addTag('CMS')
+    .build()
+  const documentFactory = () => SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api-doc', app, documentFactory)
+
   await app.listen(process.env.PORT ?? 3000)
 }
 bootstrap()
