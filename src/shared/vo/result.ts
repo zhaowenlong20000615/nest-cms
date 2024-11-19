@@ -1,5 +1,10 @@
+import { ApiProperty } from '@nestjs/swagger'
+
 export class Result {
+  @ApiProperty({ name: 'success', description: '操作是否成功', example: true })
   public success: boolean
+
+  @ApiProperty({ name: 'message', description: '操作的消息或错误消息', example: '操作成功' })
   public message: string
 
   constructor(success: boolean, message: string) {

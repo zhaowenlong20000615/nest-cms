@@ -1,0 +1,20 @@
+<h1>错误页面</h1>
+<p>{{message}}</p>
+<p class="desc">10秒后自动跳回上一个页面</p>
+<button type="button" class="btn btn-primary mt-4" onclick="back()">返回</button>
+<script>
+    const doc = document.querySelector('.desc')
+    let time = 10
+    const timer = setInterval(() => {
+        if(time === 0) {
+            clearInterval(timer)
+            back()
+        }
+        time--
+        doc.innerHTML = `${time}秒后自动跳回上一个页面`
+    }, 1000)
+
+    function back() {
+        window.history.back()
+    }
+</script>

@@ -1,6 +1,8 @@
 import { Controller, Get, Render } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 
-@Controller('dashboard')
+@Controller('admin')
+@ApiTags('admin/dashboard')
 export class DashboardController {
   @Get()
   @Render('dashboard')

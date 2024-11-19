@@ -4,6 +4,8 @@ import { ConfigurationService } from './services/configuration.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entities'
 import { UserService } from './services/user.service'
+import { IsUsernameUniqueConstraint } from './validators/user-validator'
+import { UtilityService } from './services/utility.service'
 
 @Global()
 @Module({
@@ -21,7 +23,7 @@ import { UserService } from './services/user.service'
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  providers: [ConfigurationService, UserService],
-  exports: [ConfigurationService, UserService],
+  providers: [ConfigurationService, UserService, IsUsernameUniqueConstraint, UtilityService],
+  exports: [ConfigurationService, UserService, IsUsernameUniqueConstraint, UtilityService],
 })
 export class SharedModule {}
