@@ -1,7 +1,8 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
 import { Exclude, Expose, Transform, Type } from 'class-transformer'
 import { IsOptional } from 'class-validator'
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Role } from './role.entities'
 
 @Entity()
 export class User {
@@ -53,6 +54,10 @@ export class User {
   get is_super_text(): string {
     return this.is_super ? '是' : '否'
   }
+
+  @ManyToMany(() => Role)
+  @JoinTable()
+  roles: Role[]
 
   @Column({ default: 100 })
   @ApiProperty({ description: '排序号', example: 100 })

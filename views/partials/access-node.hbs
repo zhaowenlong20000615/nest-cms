@@ -1,0 +1,36 @@
+<tr>
+    <td style="padding-left: {{multiply depth 20}}px;">{{name}}</td>
+    <td>
+        {{#if (equals type 'module')}}
+        <span class="badge bg-primary">模块</span>
+        {{else if (equals type 'menu')}}
+        <span class="badge bg-success">菜单</span>
+        {{else if (equals type 'page')}}
+        <span class="badge bg-info">页面</span>
+        {{else if (equals type 'button')}}
+        <span class="badge bg-info">按钮</span>
+        {{/if}}
+    </td>
+    <td>{{url}}</td>
+    <td>{{description}}</td>
+
+    <td>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" name="status" data-id="{{id}}" type="checkbox" role="switch"
+                id="flexSwitchCheckChecked" {{#if (isSuper status)}}checked {{/if}}>
+        </div>
+    </td>
+    <td width="10%">
+        <span class="sort-text" data-id="{{id}}">{{sort}}</span>
+        <input type="number" name="sort" class="form-control sort-input d-none" style="width:100%" data-id="{{id}}"
+            value="{{sort}}">
+    </td>
+    <td>
+        <a class="btn btn-primary btn-sm" href="/admin/accesses/{{id}}" role="button">查看</a>
+        <a class="btn btn-warning btn-sm" href="/admin/accesses/edit/{{id}}" role="button">修改</a>
+        <a class="btn btn-danger btn-sm" role="button" onclick="deleteUser({{id}})">删除</a>
+    </td>
+</tr>
+{{#each children}}
+{{> access-node this depth=(increase ../depth)}}
+{{/each}}

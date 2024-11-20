@@ -1,0 +1,111 @@
+<h1>资源列表</h1>
+<a class="btn btn-success mb-3" href="/admin/accesses/create" role="button">添加资源</a>
+<form method="GET" action="/admin/accesses" class="mb-3">
+    <input type="hidden" name="page" value="{{page}}">
+    <input type="hidden" name="limit" value="{{limit}}">
+    <div class="input-group">
+        <input type="text" name="keyword" class="form-control" placeholder="请输入搜索关键字" value="{{keyword}}">
+        <button class="btn btn-outline-secondary">搜索</button>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>类型</th>
+            <th>url地址</th>
+            <th>描述</th>
+            <th>状态</th>
+            <th>排序</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each accessTree}}
+        {{> access-node this depth=0}}
+        {{/each}}
+
+    </tbody>
+</table>
+
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item {{#if (equals page 1)}}disabled{{/if}}">
+            <a class="page-link" href="?page={{decrease page}}&keyword={{keyword}}&limit={{limit}}">上一页</a>
+        </li>
+        {{#each (range 1 pageCount)}}
+        <li class="page-item {{#if (equals this ../page)}}active{{/if}}"><a class="page-link"
+                href="?limit={{../limit}}&keyword={{../keyword}}&page={{this}}">{{this}}</a></li>
+        {{/each}}
+
+
+        <li class="page-item {{#if (equals page pageCount)}}disabled{{/if}}">
+            <a class="page-link" href="?page={{increase page}}&keyword={{keyword}}&limit={{limit}}">下一页</a>
+        </li>
+        <li class="page-item">
+            <form method="GET" action="/admin/accesses" class="d-inline-block ms-3">
+                <input type="hidden" name="keyword" value="{{keyword}}">
+                <input type="hidden" name="page" value="{{page}}">
+                <div class="input-group">
+                    <input type="number" name="limit" class="form-control" placeholder="每页条数" value="{{limit}}" min="1">
+                    <button class="btn btn-outline-secondary" type="submit">设置每页的条数</button>
+                </div>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    function deleteUser(id) {
+        $.ajax({
+            url: `/admin/accesses/${id}`,
+            type: 'delete',
+            success: (res) => {
+                if (res.success) window.location.reload()
+            }
+        })
+    }
+
+    $('.form-check-input').on('change', function () {
+        const $this = $(this)
+        const data = { [$this.prop('name')]: $this.prop('checked') }
+        $.ajax({
+            url: `/admin/accesses/${$this.data('id')}`,
+            type: 'put',
+            headers: { 'accept': 'application/json' },
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: (res) => {
+                alert(JSON.stringify(res))
+            }
+        })
+    })
+
+    $('.sort-text').on('dblclick', function () {
+        const $this = $(this)
+        const id = $this.data('id')
+        $this.addClass('d-none')
+        $(`.sort-input[data-id="${id}"]`).removeClass('d-none').focus()
+    })
+
+    $('.sort-input').on('blur', function () {
+        const $this = $(this)
+        const id = $this.data('id')
+        const key = $this.prop('name')
+        const value = $this.val()
+        const data = { [key]: value }
+        $this.addClass('d-none')
+        $.ajax({
+            url: `/admin/accesses/${$this.data('id')}`,
+            type: 'put',
+            headers: { 'accept': 'application/json' },
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: (res) => {
+                alert(JSON.stringify(res))
+                $(`.sort-text[data-id="${id}"]`).text(value).removeClass('d-none')
+            }
+        })
+    })
+
+</script>

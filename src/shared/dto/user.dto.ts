@@ -58,6 +58,10 @@ export class UpdateUserDto extends PartialTypeSwaggerNest(OmitType(PartialType(C
   password: string
 }
 
+export class UpdateUserRolesDto {
+  readonly roleIds: number[]
+}
+
 function ValidatorUsername() {
   return applyDecorators(
     Validate(IsUsernameUniqueConstraint, []),

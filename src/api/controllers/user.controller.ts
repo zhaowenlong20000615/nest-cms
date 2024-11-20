@@ -15,7 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CreateUserDto, UpdateUserDto } from 'src/shared/dtos/user.dto'
+import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/user.dto'
 import { User } from 'src/shared/entities/user.entities'
 import { UserService } from 'src/shared/services/user.service'
 import { Result } from 'src/shared/vo/result'
