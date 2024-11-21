@@ -16,8 +16,6 @@ export class RoleService extends MysqlBaseService<Role> {
   }
 
   async updateAccess(id: number, updateRoleAccessesDto: UpdateRoleAccessesDto): Promise<UpdateResult> {
-    console.log(2222222222, id, updateRoleAccessesDto)
-
     const role = await this.repository.findOneBy({ id })
     const accesses = await this.accessRepository.findBy({ id: In(updateRoleAccessesDto.accessIds) })
     role.accesses = accesses
