@@ -1,10 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm'
-import { Role } from '../entities/role.entities'
+import { Role } from '../entities/role.entity'
 import { MysqlBaseService } from './mysql-base.service'
 import { In, Repository, UpdateResult } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { UpdateRoleAccessesDto } from '../dto/role.dto'
-import { Access } from '../entities/access.entities'
+import { Access } from '../entities/access.entity'
 
 @Injectable()
 export class RoleService extends MysqlBaseService<Role> {

@@ -1,0 +1,110 @@
+<h1>
+  分类列表
+</h1>
+<a href="/admin/categories/create" class="btn btn-success mb-3">添加分类</a>
+<form method="GET" action="/admin/categories" class="mb-3">
+  <input type="hidden" name="page" value="{{page}}">
+  <input type="hidden" name="limit" value="{{limit}}">
+  <div class="input-group">
+    <input type="text" name="keyword" class="form-control" placeholder="请输入搜索关键字" value="{{keyword}}">
+    <button class="btn btn-outline-secondary">搜索</button>
+  </div>
+</form>
+<table class="table">
+  <thead>
+    <tr>
+      <td>名称</td>
+      <td>状态</td>
+      <td>排序</td>
+      <td>操作</td>
+    </tr>
+  </thead>
+  <tbody id="categoryTreeTable">
+    {{#each categoryTree}}
+    {{> category-node this depth=0}}
+    {{/each}}
+  </tbody>
+</table>
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item {{#if (equals page 1)}}disabled{{/if}}">
+      <a class="page-link" href="?page={{decrease page}}&keyword={{keyword}}&limit={{limit}}">上一页</a>
+    </li>
+    {{#each (range 1 pageCount)}}
+    <li class="page-item {{#if (equals this ../page)}}active{{/if}}"><a class="page-link"
+        href="?limit={{../limit}}&keyword={{../keyword}}&page={{this}}">{{this}}</a></li>
+    {{/each}}
+
+
+    <li class="page-item {{#if (equals page pageCount)}}disabled{{/if}}">
+      <a class="page-link" href="?page={{increase page}}&keyword={{keyword}}&limit={{limit}}">下一页</a>
+    </li>
+    <li class="page-item">
+      <form method="GET" action="/admin/categories" class="d-inline-block ms-3">
+        <input type="hidden" name="keyword" value="{{keyword}}">
+        <input type="hidden" name="page" value="{{page}}">
+        <div class="input-group">
+          <input type="number" name="limit" class="form-control" placeholder="每页条数" value="{{limit}}" min="1">
+          <button class="btn btn-outline-secondary" type="submit">设置每页的条数</button>
+        </div>
+      </form>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  function deleteCategory(id) {
+    if (confirm('确定要删除吗?')) {
+      $.ajax({
+        url: `/admin/categories/${id}`,
+        type: 'delete',
+        success: (res) => {
+          if (res.success) window.location.reload()
+        }
+      })
+    }
+  }
+  $('.form-check-input').on('change', function () {
+    const $this = $(this)
+    const data = { [$this.prop('name')]: $this.prop('checked') }
+    $.ajax({
+      url: `/admin/categories/${$this.data('id')}`,
+      type: 'put',
+      headers: { 'accept': 'application/json' },
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: (res) => {
+        alert(JSON.stringify(res))
+      }
+    })
+  })
+
+  $('.sort-text').on('dblclick', function () {
+    const $this = $(this)
+    const id = $this.data('id')
+    $this.addClass('d-none')
+    $(`.sort-input[data-id="${id}"]`).removeClass('d-none').focus()
+  })
+
+  $('.sort-input').on('blur', function () {
+    const $this = $(this)
+    const id = $this.data('id')
+    const key = $this.prop('name')
+    const value = $this.val()
+    const data = { [key]: value }
+    $this.addClass('d-none')
+    $.ajax({
+      url: `/admin/categories/${$this.data('id')}`,
+      type: 'put',
+      headers: { 'accept': 'application/json' },
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: (res) => {
+        alert(JSON.stringify(res))
+        $(`.sort-text[data-id="${id}"]`).text(value).removeClass('d-none')
+      }
+    })
+  })
+
+</script>

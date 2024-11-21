@@ -57,13 +57,15 @@
 
 <script>
     function deleteUser(id) {
-        $.ajax({
-            url: `/admin/accesses/${id}`,
-            type: 'delete',
-            success: (res) => {
-                if (res.success) window.location.reload()
-            }
-        })
+        if (confirm('确定要删除吗?')) {
+            $.ajax({
+                url: `/admin/accesses/${id}`,
+                type: 'delete',
+                success: (res) => {
+                    if (res.success) window.location.reload()
+                }
+            })
+        }
     }
 
     $('.form-check-input').on('change', function () {

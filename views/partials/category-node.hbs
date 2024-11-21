@@ -1,0 +1,30 @@
+<tr data-id="{{id}}" data-parent="{{parent.id}}">
+    <td style="padding-left: {{multiply depth 20}}px;">
+        <span class="toggle cursor-pointer" data-id="{{id}}">
+            {{#if children.length}}
+            <i class="bi bi-folder-minus"></i>
+            {{/if}}
+        </span>
+        {{name}}
+    </td>
+    <td>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" name="status" data-id="{{id}}" type="checkbox" role="switch"
+                id="flexSwitchCheckChecked" {{#if (isSuper status)}}checked {{/if}}>
+        </div>
+    </td>
+
+    <td>
+        <span class="sort-text" data-id="{{id}}">{{sort}}</span>
+        <input type="number" name="sort" class="form-control sort-input d-none" style="width:80px" data-id="{{id}}"
+            value="{{sort}}">
+    </td>
+    <td>
+        <a href="/admin/categories/{{id}}" class="btn btn-primary btn-sm">查看</a>
+        <a href="/admin/categories/edit/{{id}}" class="btn btn-warning btn-sm">编辑</a>
+        <button class="btn btn-danger btn-sm" onclick="deleteCategory({{id}})">删除</button>
+    </td>
+</tr>
+{{#each children}}
+{{> category-node this depth=(increase ../depth)}}
+{{/each}}

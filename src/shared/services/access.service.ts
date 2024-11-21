@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { MysqlBaseService } from './mysql-base.service'
 import { TreeRepository, UpdateResult } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Access } from '../entities/access.entities'
+import { Access } from '../entities/access.entity'
 import { CreateAccessDto, UpdateAccessDto } from '../dto/access.dto'
 
 @Injectable()
@@ -31,7 +31,6 @@ export class AccessService extends MysqlBaseService<Access> {
     if (parentId) {
       access.parent = await this.repository.findOneBy({ id: parentId })
     }
-    console.log(11111111111, access)
     await this.repository.save(access)
     return UpdateResult.from({ raw: [], affected: 1, records: [] })
   }
