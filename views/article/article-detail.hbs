@@ -3,8 +3,49 @@
 </h1>
 <div class="mb-3">
     <label class="form-label">名称:</label>
-    <p class="form-control-plaintext">{{article.name}}</p>
+    <p class="form-control-plaintext">{{article.title}}</p>
 </div>
+
+<div class="mb-3">
+    <label class="form-label">内容:</label>
+    <p class="form-control-plaintext">{{{article.content}}}</p>
+</div>
+<div class="mb-3">
+    <label class="form-label">分类:</label>
+    <p class="form-control-plaintext">
+        {{#each article.categories}}
+        <span class="badge bg-secondary">{{this.name}}</span>
+        {{/each}}
+    </p>
+</div>
+<div class="mb-3">
+    <label class="form-label">标签:</label>
+    <p class="form-control-plaintext">
+        {{#each article.tags}}
+        <span class="badge bg-info text-dark">{{this.name}}</span>
+        {{/each}}
+    </p>
+</div>
+<div class="mb-3">
+    <label class="form-label">审核状态:</label>
+    <p class="form-control-plaintext">
+        {{#if (equals article.state 'draft')}}<span class="badge bg-secondary">{{article.state_text}}</span>{{/if}}
+        {{#if (equals article.state 'pending')}}<span
+            class="badge bg-warning text-dark">{{article.state_text}}</span>{{/if}}
+        {{#if (equals article.state 'published')}}<span class="badge bg-success">{{article.state_text}}</span>{{/if}}
+        {{#if (equals article.state 'rejected')}}<span class="badge bg-danger">{{article.state_text}}</span>{{/if}}
+        {{#if (equals article.state 'withdrawn')}}<span class="badge bg-dark">{{article.state_text}}</span>{{/if}}
+    </p>
+</div>
+{{#if (equals article.state 'rejected')}}
+<div class="mb-3">
+    <label class="form-label">审核不通过原因:</label>
+    <p class="form-control-plaintext">
+        {{article.rejectionReason}}
+    </p>
+</div>
+{{/if}}
+
 
 <div class="mb-3">
     <label class="form-label">状态:</label>
@@ -14,6 +55,5 @@
     <label class="form-label">排序:</label>
     <p class="form-control-plaintext">{{article.sort}}</p>
 </div>
-<a href="/admin/articles/edit/{{article.id}}"
-    class="btn btn-warning btn-sm">修改</a>
+<a href="/admin/articles/edit/{{article.id}}" class="btn btn-warning btn-sm">修改</a>
 <a href="/admin/articles" class="btn btn-secondary btn-sm">返回列表</a>

@@ -1,22 +1,162 @@
 <h1>{{#if article.id}}编辑文章{{else}}添加文章{{/if}}</h1>
-<form
-    action="/admin/articles{{#if article.id}}/{{article.id}}{{/if}}"
-    method="POST">
+<form action="/admin/articles{{#if article.id}}/{{article.id}}{{/if}}" method="POST" id="articleForm">
     {{#if article.id}}<input type="hidden" name="_method" value="PUT">{{/if}}
-        <div class="mb-3">
-            <label for="name" class="form-label">名称</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{article.name}}">
+    <div class="mb-3">
+        <label for="title" class="form-label">标题</label>
+        <input type="text" class="form-control" id="ntitleame" name="title" value="{{article.title}}">
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">内容</label>
+        <div id="editor">
+            {{{article.content}}}
         </div>
-        <div class="mb-3">
-            <label for="status" class="form-label">状态</label>
-            <select class="form-control" id="status" name="status">
-                <option value="1" {{#if article.status}}selected{{/if}}>激活</option>
-                <option value="0" {{#unless article.status}}selected{{/unless}}>未激活</option>
-            </select>
+        <input type="hidden" name="content" id="contentInput" />
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">分类</label>
+        <div id="categoryTree" class="border rounded p-3"></div>
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">标签</label>
+        <div class="d-flex flex-wrap">
+            {{#each tags}}
+            <div class="form-check me-3 mb-2">
+                <input class="form-check-input" {{#if (contains (mapToId ../article.tags) this.id)}}checked{{/if}}
+                    type="checkbox" name="tagIds" value="{{this.id}}">
+                <label class="form-check-label">{{this.name}}</label>
+            </div>
+            {{/each}}
         </div>
-          <div class="mb-3">
-            <label for="sort" class="form-label">排序</label>
-            <input type="number" class="form-control" id="sort" name="sort" value="{{article.sort}}">
-        </div>
-        <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">状态</label>
+        <select class="form-control" id="status" name="status">
+            <option value="1" {{#if article.status}}selected{{/if}}>激活</option>
+            <option value="0" {{#unless article.status}}selected{{/unless}}>未激活</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="sort" class="form-label">排序</label>
+        <input type="number" class="form-control" id="sort" name="sort" value="{{article.sort}}">
+    </div>
+    <button type="submit" class="btn btn-primary">保存</button>
 </form>
+
+<script>
+    const {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph,
+        Image,
+        ImageCaption,
+        ImageResize,
+        ImageStyle,
+        ImageToolbar,
+        ImageUpload,
+    } = CKEDITOR;
+
+    async function getSignature() {
+        const response = await fetch('/admin/oss/get-signature')
+        return response.json()
+    }
+
+    class OssUploadAdapter {
+        constructor(loader) {
+            this.loader = loader
+        }
+
+        async upload() {
+            const file = await this.loader.file
+            const { accessid, dir, expire, host, policy, signature, stsToken } = await getSignature()
+            let formData = new FormData();
+            formData.append("success_action_status", "200"); // 指定成功上传时，服务端返回状态码200，默认返回204。
+            formData.append("policy", policy);
+            formData.append("signature", signature);
+            formData.append("OSSAccessKeyId", accessid);
+            if (stsToken) formData.append("x-oss-security-token", stsToken);
+            formData.append("key", dir + file.name); // 文件名
+            formData.append("file", file); // file必须为最后一个表单域
+            await fetch(host, { method: 'POST', body: formData })
+            return { default: `${host}/${file.name}` }
+
+        }
+    }
+
+    function OssUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => new OssUploadAdapter(loader)
+    }
+
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            plugins: [Essentials, Bold, Italic, Font, Paragraph, Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, ImageUpload, OssUploadAdapterPlugin],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|', 'insertImage'
+            ],
+            image: {
+                toolbar: [
+                    'imageStyle:block',
+                    'imageStyle:side',
+                    '|',
+                    'toggleImageCaption',
+                    'imageTextAlternative',
+                    '|',
+                ],
+                insert: {
+                    type: 'auto'
+                }
+            }
+        })
+        .then(editor => {
+            $('#articleForm').on('submit', function () {
+                $('#contentInput').prop('value', editor.getData())
+            })
+        })
+        .catch( /* ... */);
+</script>
+
+
+
+<script>
+    const categoryTree = {{{ json categoryTree }}}
+    const voArticle = {{{ json article }}}
+    console.log(categoryTree)
+
+    function renderTree(categories) {
+        let html = '<ul class="list-unstyled">';
+        categories.forEach(function (category) {
+            html += `
+            <li class="mb-2">
+                <div class="d-flex align-items-center">
+                    ${category.children?.length > 0 ? '<span class="toggle me-2 cursor-pointer"><i class="bi bi-folder-plus"></i></span>' : '<span class="me-4"></span>'}
+                    <label class="form-check-label">
+                        <input type="checkbox" ${voArticle?.categories?.map(item => item.id)?.includes(category.id) ? 'checked' : ''} class="form-check-input parent-checkbox" name="categoryIds" value="${category.id}" >
+                        ${category.name}
+                    </label>
+                </div>
+                ${category.children?.length > 0 ? `<div class="children ms-4" >${renderTree(category.children)}</div>` : ''}
+            </li>`;
+        });
+        html += '</ul>';
+        return html;
+    }
+    $('body').on('click', '.toggle', function () {
+        const childrenContainer = $(this).parent().siblings('.children');
+        if (childrenContainer.is(':visible')) {
+            childrenContainer.hide();
+            $(this).html('<i class="bi bi-folder-plus"></i>');
+        } else {
+            childrenContainer.show();
+            $(this).html('<i class="bi bi-folder-minus"></i>');
+        }
+    });
+    $('body').on('change', '.parent-checkbox', function () {
+        const isChecked = $(this).is(':checked');
+        $(this).closest('li').find('.children input[type="checkbox"]').prop('checked', isChecked)
+    })
+    $('#categoryTree').html(renderTree(categoryTree));
+
+</script>

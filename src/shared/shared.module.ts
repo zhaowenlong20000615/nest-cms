@@ -16,6 +16,9 @@ import { Article } from './entities/article.entity'
 import { ArticleService } from './services/article.service'
 import { Category } from './entities/category.entity'
 import { CategoryService } from './services/category.service'
+import { OssService } from './services/oss.service'
+import { NotificationService } from './services/notification.service'
+import { MailService } from './services/mail.service'
 @Global()
 @Module({
   imports: [
@@ -42,6 +45,9 @@ import { CategoryService } from './services/category.service'
     TagService,
     ArticleService,
     CategoryService,
+    OssService,
+    NotificationService,
+    MailService,
   ],
   exports: [
     ConfigurationService,
@@ -53,6 +59,9 @@ import { CategoryService } from './services/category.service'
     TagService,
     ArticleService,
     CategoryService,
+    OssService,
+    NotificationService,
+    MailService,
   ],
 })
 export class SharedModule {}

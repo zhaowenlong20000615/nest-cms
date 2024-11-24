@@ -29,4 +29,20 @@ export class ConfigurationService {
       database: this.mysqlDatabase,
     }
   }
+
+  get ossAcessKeyId(): string {
+    return this.configService.get<string>('OSS_ACCESS_KEY_ID')
+  }
+  get ossAcessKeySecret(): string {
+    return this.configService.get<string>('OSS_ACCESS_KEY_SECRET')
+  }
+  get ossRoleArn(): string {
+    return this.configService.get<string>('OSS_STS_ROLE_ARN')
+  }
+  get ossRegion(): string {
+    return this.configService.get<string>('OSS_REGION')
+  }
+  get ossBucket(): string {
+    return this.configService.get<string>('OSS_BUCKET')
+  }
 }

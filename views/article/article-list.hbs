@@ -1,48 +1,106 @@
 <h1>
-  文章列表
+    文章列表
 </h1>
 <a href="/admin/articles/create" class="btn btn-success mb-3">添加文章</a>
 <form method="GET" action="/admin/articles" class="mb-3">
     <input type="hidden" name="page" value="{{page}}">
     <input type="hidden" name="limit" value="{{limit}}">
-  <div class="input-group">
-    <input type="text" name="keyword" class="form-control" placeholder="请输入搜索关键字" value="{{keyword}}">
-    <button class="btn btn-outline-secondary">搜索</button>
-  </div>
+    <div class="input-group">
+        <input type="text" name="keyword" class="form-control" placeholder="请输入搜索关键字" value="{{keyword}}">
+        <button class="btn btn-outline-secondary">搜索</button>
+    </div>
 </form>
 <table class="table">
-  <thead>
-    <tr>
-      <td>名称</td>
-      <td>状态</td>
-      <td>排序</td>
-      <td>操作</td>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each articles}}
-      <tr>
-        <td>{{this.name}}</td>
-        <td>
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" name="status" data-id="{{this.id}}" type="checkbox" role="switch"
-                    id="flexSwitchCheckChecked" {{#if (isSuper this.status)}}checked {{/if}}>
-            </div>
-        </td>
-        <td>
-            <span class="sort-text" data-id="{{this.id}}">{{this.sort}}</span>
-            <input type="number" name="sort" class="form-control sort-input d-none" style="width:100%"
-                data-id="{{this.id}}" value="{{this.sort}}">
-        </td>
-        <td>
-          <a href="/admin/articles/{{this.id}}" class="btn btn-primary btn-sm">查看</a>
-          <a href="/admin/articles/edit/{{this.id}}" class="btn btn-warning btn-sm">修改</a>
-          <a class="btn btn-danger btn-sm" onclick="deleteArticle({{this.id}})">删除</a>
-        </td>
-      </tr>
-      {{/each}}
-  </tbody>
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>分类</th>
+            <th>标签</th>
+            <th>状态</th>
+            <th>审核状态</th>
+            <th>排序</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each articles}}
+        <tr>
+            <td>{{this.title}}</td>
+            <td>
+                {{#each this.categories}}
+                <span class="badge bg-secondary">{{this.name}}</span>
+                {{/each}}
+            </td>
+            <td>
+                {{#each this.tags}}
+                <span class="badge bg-info text-dark">{{this.name}}</span>
+                {{/each}}
+            </td>
+            <td>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" name="status" data-id="{{this.id}}" type="checkbox" role="switch"
+                        id="flexSwitchCheckChecked" {{#if (isSuper this.status)}}checked {{/if}}>
+                </div>
+            </td>
+            <td>
+                {{#if (equals this.state 'draft')}}<span class="badge bg-secondary">{{this.state_text}}</span>{{/if}}
+                {{#if (equals this.state 'pending')}}<span
+                    class="badge bg-warning text-dark">{{this.state_text}}</span>{{/if}}
+                {{#if (equals this.state 'published')}}<span class="badge bg-success">{{this.state_text}}</span>{{/if}}
+                {{#if (equals this.state 'rejected')}}<span class="badge bg-danger">{{this.state_text}}</span>{{/if}}
+                {{#if (equals this.state 'withdrawn')}}<span class="badge bg-dark">{{this.state_text}}</span>{{/if}}
+            </td>
+            <td>
+                <span class="sort-text" data-id="{{this.id}}">{{this.sort}}</span>
+                <input type="number" name="sort" class="form-control sort-input d-none" style="width:100%"
+                    data-id="{{this.id}}" value="{{this.sort}}">
+            </td>
+            <td>
+                <a href="/admin/articles/{{this.id}}" class="btn btn-primary btn-sm">查看</a>
+                <a href="/admin/articles/edit/{{this.id}}" class="btn btn-warning btn-sm">修改</a>
+                <a class="btn btn-danger btn-sm" onclick="deleteArticle({{this.id}})">删除</a>
+                {{#if (equals this.state 'draft')}}
+                <button class="btn btn-warning btn-sm"
+                    onclick="approvalBtn({{this.id}}, 'pending', '提交审核')">提交审核</button>
+                {{/if}}
+                {{#if (equals this.state 'pending')}}
+                <button class="btn btn-warning btn-sm"
+                    onclick="approvalBtn({{this.id}}, 'published','审核通过')">审核通过</button>
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#rejectModal-{{this.id}}">审核不通过</button>
+                <div class="modal fade" id="rejectModal-{{this.id}}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">审核不通过</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="rejectionReason-{{this.id}}" class="form-label">不通过的原因</label>
+                                    <textarea class="form-control" id="rejectionReason-{{this.id}}"
+                                        name="rejectionReason" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secodary" data-bs-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="rejectArticle({{this.id}})">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if (equals this.state 'published')}}
+                <button class="btn btn-danger btn-sm" onclick="approvalBtn({{this.id}}, 'withdrawn', '撤回')">撤回</button>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
 </table>
+
+
 
 <nav aria-label="...">
     <ul class="pagination">
@@ -72,7 +130,30 @@
 </nav>
 <script>
 
-    function deleteArticle (id) {
+    function rejectArticle(id) {
+        const dom = $(`#rejectionReason-${id}`)
+        const data = { [dom.prop('name')]: dom.prop('value') }
+        approvalBtn(id, 'rejected', '审核不通过', data)
+    }
+
+
+    function approvalBtn(id, state, title, otherParams) {
+        if (window.confirm(`确定${title}吗？`)) {
+            const data = { state, ...otherParams }
+            $.ajax({
+                url: `/admin/articles/approval/${id}`,
+                type: 'put',
+                headers: { 'accept': 'application/json' },
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: (res) => {
+                    if (res.success) window.location.reload()
+                }
+            })
+        }
+    }
+
+    function deleteArticle(id) {
         $.ajax({
             url: `/admin/articles/${id}`,
             type: 'delete',
@@ -82,7 +163,7 @@
         })
     }
 
-    
+
     $('.form-check-input').on('change', function () {
         const $this = $(this)
         const data = { [$this.prop('name')]: $this.prop('checked') }

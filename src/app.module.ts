@@ -6,6 +6,8 @@ import { MethodOverride } from './shared/middlewares/method-override'
 import { PropertyFilter } from './shared/middlewares/property-filter'
 import { join } from 'path'
 import { AcceptLanguageResolver, CookieResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 
 @Module({
   imports: [
@@ -19,6 +21,18 @@ import { AcceptLanguageResolver, CookieResolver, HeaderResolver, I18nModule, Que
         watch: true,
       },
       resolvers: [new QueryResolver(['lang', 'l']), new HeaderResolver(['x-custom-lang']), new CookieResolver(), AcceptLanguageResolver],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+    }),
+    EventEmitterModule.forRoot({
+      wildcard: false,
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      maxListeners: 10,
+      verboseMemoryLeak: false,
+      ignoreErrors: false,
     }),
   ],
   controllers: [],
