@@ -1,7 +1,10 @@
 <h1>
     文章列表
 </h1>
-<a href="/admin/articles/create" class="btn btn-success mb-3">添加文章</a>
+<a href="/admin/articles/create" class="btn btn-success mb-3  btn-sm">添加文章</a>
+<a href="/admin/articles/word-export/{{mapToId articles}}" class="btn mb-3 btn-primary btn-sm">word导出</a>
+<a href="/admin/articles/ppt-export/{{mapToId articles}}" class="btn mb-3 btn-primary btn-sm">ppt导出</a>
+<a href="/admin/articles/excel-export/{{mapToId articles}}" class="btn mb-3 btn-primary btn-sm">excel导出</a>
 <form method="GET" action="/admin/articles" class="mb-3">
     <input type="hidden" name="page" value="{{page}}">
     <input type="hidden" name="limit" value="{{limit}}">
@@ -94,6 +97,9 @@
                 {{#if (equals this.state 'published')}}
                 <button class="btn btn-danger btn-sm" onclick="approvalBtn({{this.id}}, 'withdrawn', '撤回')">撤回</button>
                 {{/if}}
+                <a href="/admin/articles/word-export/{{this.id}}" class="btn btn-primary btn-sm">word导出</a>
+                <a href="/admin/articles/ppt-export/{{this.id}}" class="btn btn-primary btn-sm">ppt导出</a>
+                <a href="/admin/articles/excel-export/{{this.id}}" class="btn btn-primary btn-sm">excel导出</a>
             </td>
         </tr>
         {{/each}}

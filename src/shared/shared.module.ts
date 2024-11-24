@@ -19,6 +19,9 @@ import { CategoryService } from './services/category.service'
 import { OssService } from './services/oss.service'
 import { NotificationService } from './services/notification.service'
 import { MailService } from './services/mail.service'
+import { WordExportService } from './services/word-export.service'
+import { PptExportService } from './services/ppt-export.service'
+import { ExcelExportService } from './services/excel-export.service'
 @Global()
 @Module({
   imports: [
@@ -48,6 +51,9 @@ import { MailService } from './services/mail.service'
     OssService,
     NotificationService,
     MailService,
+    WordExportService,
+    PptExportService,
+    ExcelExportService,
   ],
   exports: [
     ConfigurationService,
@@ -62,6 +68,9 @@ import { MailService } from './services/mail.service'
     OssService,
     NotificationService,
     MailService,
+    WordExportService,
+    PptExportService,
+    ExcelExportService,
   ],
 })
 export class SharedModule {}

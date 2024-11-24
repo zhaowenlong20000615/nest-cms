@@ -45,4 +45,17 @@ export class ConfigurationService {
   get ossBucket(): string {
     return this.configService.get<string>('OSS_BUCKET')
   }
+
+  get smtpHost(): string {
+    return this.configService.get<string>('SMTP_HOST')
+  }
+  get smtpPort(): string {
+    return this.configService.get<string>('SMTP_PORT')
+  }
+  get smtpUser(): string {
+    return this.configService.get<string>('SMTP_USER')
+  }
+  get smtpPass(): string {
+    return this.configService.get<string>('SMTP_PASS')
+  }
 }

@@ -10,8 +10,16 @@ export abstract class MysqlBaseService<T> {
     return this.repository.find()
   }
 
+  find(options?: FindManyOptions<T>): Promise<T[]> {
+    return this.repository.find(options)
+  }
+
   findOneBy(options: FindOptionsWhere<T>): Promise<T | null> {
     return this.repository.findOneBy(options)
+  }
+
+  findBy(where: FindOptionsWhere<T> | FindOptionsWhere<T>[]): Promise<T[]> {
+    return this.repository.findBy(where)
   }
 
   findOne(options: FindOneOptions<T>): Promise<T | null> {
