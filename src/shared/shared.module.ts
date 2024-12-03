@@ -22,6 +22,10 @@ import { MailService } from './services/mail.service'
 import { WordExportService } from './services/word-export.service'
 import { PptExportService } from './services/ppt-export.service'
 import { ExcelExportService } from './services/excel-export.service'
+import { SettingService } from './services/setting.service'
+import { MongooseModule } from '@nestjs/mongoose'
+import { Setting, settingSchema } from './schemas/setting.schema'
+
 @Global()
 @Module({
   imports: [
@@ -37,6 +41,11 @@ import { ExcelExportService } from './services/excel-export.service'
       }),
     }),
     TypeOrmModule.forFeature([User, Role, Access, Tag, Article, Category]),
+    MongooseModule.forRootAsync({
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => ({ uri: configurationService.mongodbConfig.uri }),
+    }),
+    MongooseModule.forFeature([{ name: Setting.name, schema: settingSchema }]),
   ],
   providers: [
     ConfigurationService,
@@ -54,6 +63,7 @@ import { ExcelExportService } from './services/excel-export.service'
     WordExportService,
     PptExportService,
     ExcelExportService,
+    SettingService,
   ],
   exports: [
     ConfigurationService,
@@ -71,6 +81,7 @@ import { ExcelExportService } from './services/excel-export.service'
     WordExportService,
     PptExportService,
     ExcelExportService,
+    SettingService,
   ],
 })
 export class SharedModule {}

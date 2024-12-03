@@ -8,6 +8,7 @@ import { ArticleController } from './controllers/article.controller'
 import { CategoryController } from './controllers/category.controller'
 import { UploadController } from './controllers/upload.controller'
 import { OssController } from './controllers/oss.controller'
+import { SettingController } from './controllers/setting.controller';
 @Module({
   controllers: [
     DashboardController,
@@ -19,6 +20,7 @@ import { OssController } from './controllers/oss.controller'
     CategoryController,
     UploadController,
     OssController,
+    SettingController,
   ],
 })
 export class AdminModule {}
