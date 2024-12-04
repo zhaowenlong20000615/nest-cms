@@ -42,4 +42,18 @@ export abstract class MysqlBaseService<T> {
   delete(id: number): Promise<DeleteResult> {
     return this.repository.delete(id)
   }
+
+  count(): Promise<number> {
+    return this.repository.count()
+  }
+
+  async getTrend(tableName: string) {
+    const res = await this.repository.query(`
+      SELECT DATE_FORMAT(createdAt,'%Y-%m-%d') as date, COUNT(*) as count from ${tableName}
+      GROUP BY date ORDER BY date ASC;
+   `)
+    const dates = res.map((item) => item.date)
+    const counts = res.map((item) => item.count)
+    return { dates, counts }
+  }
 }

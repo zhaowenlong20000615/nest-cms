@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm'
-import { Expose } from 'class-transformer'
+import { Expose, Transform } from 'class-transformer'
 import { Category } from './category.entity'
 import { Tag } from './tag.entity'
 import { ArticleStateEnum, ArticleStateEnumText } from '../enums/article.enum'
+import * as dayjs from 'dayjs'
 
 @Entity()
 export class Article {
@@ -55,11 +56,11 @@ export class Article {
   @ApiProperty({ description: '排序号', example: 100 })
   sort: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({ transformer: { from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'), to: () => new Date() } })
   @ApiProperty({ description: '创建时间', example: '2024-11-16 12:18:40' })
   createdAt: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ transformer: { from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'), to: () => new Date() } })
   @ApiProperty({ description: '更新时间', example: '2024-11-16 12:18:40' })
   updatedAt: Date
 }

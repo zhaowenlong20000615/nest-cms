@@ -3,6 +3,7 @@ import { Exclude, Expose, Transform, Type } from 'class-transformer'
 import { IsOptional } from 'class-validator'
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Role } from './role.entity'
+import * as dayjs from 'dayjs'
 
 @Entity()
 export class User {
@@ -63,11 +64,11 @@ export class User {
   @ApiProperty({ description: '排序号', example: 100 })
   sort: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({ transformer: { from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'), to: () => new Date() } })
   @ApiProperty({ description: '创建时间', example: '2024-11-16 12:18:40' })
-  createAt: Date
+  createdAt: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ transformer: { from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'), to: () => new Date() } })
   @ApiProperty({ description: '更新时间', example: '2024-11-16 12:18:40' })
-  updateAt: Date
+  updatedAt: Date
 }

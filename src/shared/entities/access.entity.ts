@@ -65,9 +65,9 @@ export class Access {
 
   @CreateDateColumn()
   @ApiProperty({ description: '创建时间', example: '2024-11-16 12:18:40' })
-  createAt: Date
+  createdAt: Date
 
   @UpdateDateColumn()
   @ApiProperty({ description: '更新时间', example: '2024-11-16 12:18:40' })
-  updateAt: Date
+  updatedAt: Date
 }

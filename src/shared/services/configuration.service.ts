@@ -79,4 +79,16 @@ export class ConfigurationService {
       uri: `mongodb://${this.mongodbHost}:${this.mongodbProt}/${this.mongodbDB}`,
     }
   }
+
+  get ipApiUrl(): string {
+    return this.configService.get<string>('IP_API_URL')
+  }
+
+  get weatherApiUrl(): string {
+    return this.configService.get<string>('WEATHER_API_URL')
+  }
+
+  get weatherApiKey(): string {
+    return this.configService.get<string>('WEATHER_API_KEY')
+  }
 }

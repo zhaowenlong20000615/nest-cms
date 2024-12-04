@@ -25,6 +25,9 @@ import { ExcelExportService } from './services/excel-export.service'
 import { SettingService } from './services/setting.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Setting, settingSchema } from './schemas/setting.schema'
+import { DashboardService } from './services/dashboard.service'
+import { WeatherService } from './services/weather.service'
+import { SystemService } from './services/system.service'
 
 @Global()
 @Module({
@@ -64,6 +67,9 @@ import { Setting, settingSchema } from './schemas/setting.schema'
     PptExportService,
     ExcelExportService,
     SettingService,
+    DashboardService,
+    WeatherService,
+    SystemService,
   ],
   exports: [
     ConfigurationService,
@@ -82,6 +88,9 @@ import { Setting, settingSchema } from './schemas/setting.schema'
     PptExportService,
     ExcelExportService,
     SettingService,
+    DashboardService,
+    WeatherService,
+    SystemService,
   ],
 })
 export class SharedModule {}
