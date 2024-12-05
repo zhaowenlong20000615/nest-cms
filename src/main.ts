@@ -9,6 +9,8 @@ import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as helpers from './shared/helpers'
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n'
+import { RedisService } from './shared/services/redis.service'
+import { RedisStore } from 'connect-redis'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -27,8 +29,11 @@ async function bootstrap() {
     }),
   )
   app.use(cookieParser())
+
+  const redisService = app.get(RedisService)
   app.use(
     session({
+      store: new RedisStore({ client: redisService.getClient() }),
       secret: 'my-secret',
       resave: true,
       saveUninitialized: true,

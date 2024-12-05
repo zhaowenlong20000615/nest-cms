@@ -91,4 +91,16 @@ export class ConfigurationService {
   get weatherApiKey(): string {
     return this.configService.get<string>('WEATHER_API_KEY')
   }
+
+  get redisHost(): string {
+    return this.configService.get<string>('REDIS_HOST')
+  }
+
+  get redisPort(): number {
+    return this.configService.get<number>('REDIS_PORT')
+  }
+
+  get redisPassword(): string {
+    return this.configService.get<string>('REDIS_PASSWORD')
+  }
 }

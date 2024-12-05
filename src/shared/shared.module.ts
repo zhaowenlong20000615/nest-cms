@@ -28,6 +28,7 @@ import { Setting, settingSchema } from './schemas/setting.schema'
 import { DashboardService } from './services/dashboard.service'
 import { WeatherService } from './services/weather.service'
 import { SystemService } from './services/system.service'
+import { RedisService } from './services/redis.service'
 
 @Global()
 @Module({
@@ -70,6 +71,7 @@ import { SystemService } from './services/system.service'
     DashboardService,
     WeatherService,
     SystemService,
+    RedisService,
   ],
   exports: [
     ConfigurationService,
@@ -91,6 +93,7 @@ import { SystemService } from './services/system.service'
     DashboardService,
     WeatherService,
     SystemService,
+    RedisService,
   ],
 })
 export class SharedModule {}
