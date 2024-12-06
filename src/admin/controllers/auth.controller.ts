@@ -38,5 +38,6 @@ export class AuthController {
   @Redirect('/admin/login')
   logout(@Session() session) {
     session.user = null
+    session.menuTree = null
   }
 }

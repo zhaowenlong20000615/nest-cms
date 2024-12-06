@@ -43,7 +43,7 @@ export class Access {
   @ApiProperty({ description: '描述', example: '描述' })
   description: string
 
-  @TreeParent()
+  @TreeParent({ onDelete: 'CASCADE' })
   parent: Access
 
   @TreeChildren()

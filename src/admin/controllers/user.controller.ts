@@ -61,7 +61,7 @@ export class UserController {
   @Get('create')
   @Render('user/user-form')
   createForm() {
-    return {}
+    return { user: {} }
   }
 
   @Post()

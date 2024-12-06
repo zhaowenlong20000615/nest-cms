@@ -8,69 +8,26 @@
                 </button>
             </h2>
         </div>
+        {{#each menuTree}}
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    权限管理
+                    data-bs-target="#flush-collapse{{id}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                    {{name }}
                 </button>
             </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample1">
+            <div id="flush-collapse{{id}}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample1">
                 <div class="accordion-body">
                     <ul class="list-group">
+                        {{#each children}}
                         <li class="list-group-item">
-                            <a href="/admin/users">用户管理</a>
+                            <a href="{{url}}">{{name}}</a>
                         </li>
-                        <li class="list-group-item">
-                            <a href="/admin/roles">角色管理</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="/admin/accesses">资源管理</a>
-                        </li>
+                        {{/each}}
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    内容管理
-                </button>
-            </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
-                <div class="accordion-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/admin/tags">标签管理</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="/admin/articles">文章管理</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="/admin/categories">分类管理</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    设置
-                </button>
-            </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
-                <div class="accordion-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/admin/settings">网站设置</a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
+        {{/each}}
     </div>
 </div>
