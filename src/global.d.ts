@@ -4,5 +4,6 @@ declare namespace Express {
       user: any
       menuTree: any
     }
+    user: any
   }
 }

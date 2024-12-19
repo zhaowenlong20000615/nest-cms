@@ -103,4 +103,16 @@ export class ConfigurationService {
   get redisPassword(): string {
     return this.configService.get<string>('REDIS_PASSWORD')
   }
+
+  get jwtSecret(): string {
+    return this.configService.get<string>('JWT_SECRET')
+  }
+
+  get jwtRefreshSecret(): string {
+    return this.configService.get<string>('JWT_REFRESH_SECRET')
+  }
+
+  get jwtExpiresIn(): string {
+    return this.configService.get<string>('JWT_EXPIRES_IN')
+  }
 }

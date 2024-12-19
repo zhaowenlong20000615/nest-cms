@@ -29,6 +29,8 @@ import { DashboardService } from './services/dashboard.service'
 import { WeatherService } from './services/weather.service'
 import { SystemService } from './services/system.service'
 import { RedisService } from './services/redis.service'
+import { JWTService } from './services/jwt.service'
+import { JwtModule } from '@nestjs/jwt'
 
 @Global()
 @Module({
@@ -50,6 +52,14 @@ import { RedisService } from './services/redis.service'
       useFactory: (configurationService: ConfigurationService) => ({ uri: configurationService.mongodbConfig.uri }),
     }),
     MongooseModule.forFeature([{ name: Setting.name, schema: settingSchema }]),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => ({
+        secret: configurationService.jwtSecret,
+        signOptions: { expiresIn: configurationService.jwtExpiresIn },
+      }),
+    }),
   ],
   providers: [
     ConfigurationService,
@@ -72,6 +82,7 @@ import { RedisService } from './services/redis.service'
     WeatherService,
     SystemService,
     RedisService,
+    JWTService,
   ],
   exports: [
     ConfigurationService,
@@ -94,6 +105,7 @@ import { RedisService } from './services/redis.service'
     WeatherService,
     SystemService,
     RedisService,
+    JWTService,
   ],
 })
 export class SharedModule {}
